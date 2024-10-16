@@ -1,12 +1,16 @@
 <settings>
     <servers>
         <server>
+            <id>nexus</id>
+            <username>${REPOSITORY_USERID}</username>
+            <password>${REPOSITORY_CREDENTIALS}</password>
+        </server>
+        <server>
             <id>maven2.releases.levigo.de</id>
             <username>${REPOSITORY_RELEASE_USERID}</username>
             <password>${REPOSITORY_RELEASE_CREDENTIALS}</password>
         </server>
     </servers>
-
     <profiles>
         <!--
          Downloading all maven artifacts from a mirror some 6000 miles away does not seem reasonable.
@@ -29,7 +33,7 @@
                     </releases>
                 </repository>
                 <repository>
-                    <id>maven2.releases.levigo.de</id>
+                    <id>nexus</id>
                     <url>${REPOSITORY_URL}</url>
                     <releases>
                         <enabled>true</enabled>
@@ -51,7 +55,7 @@
                     </releases>
                 </pluginRepository>
                 <pluginRepository>
-                    <id>maven2.releases.levigo.de</id>
+                    <id>nexus</id>
                     <url>${REPOSITORY_URL}</url>
                     <releases>
                         <enabled>true</enabled>
