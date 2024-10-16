@@ -3,9 +3,36 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jadice.util</groupId>
   <artifactId>jadice-dss-utils</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <name>jadice dss signature utils</name>
   <version>7.0.0-SNAPSHOT</version>
+
+  <prerequisites>
+    <maven>3.3.9</maven>
+  </prerequisites>
+
+  <scm>
+    <connection>
+      scm:git:ssh://git@github.com:levigo/jadice-dss-utils.git
+    </connection>
+    <developerConnection>
+      scm:git:ssh://git@github.com:levigo/jadice-dss-utils.git
+    </developerConnection>
+    <tag>HEAD</tag>
+
+    <url>https://github.com/levigo/jadice-dss-utils</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>maven2.releases.levigo.de</id>
+      <url>https://levigo.de/maven2/content/repositories/levigo-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven2.snapshots.levigo.de</id>
+      <url>https://levigo.de/maven2/content/repositories/levigo-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <properties>
     <jadice.utils.version>6.5.23</jadice.utils.version>
@@ -105,26 +132,10 @@
 
     </dependencies>
   </dependencyManagement>
-  <scm>
-    <connection>
-      scm:git:ssh://git@github.com:levigo/jadice-dss-utils.git
-    </connection>
-    <developerConnection>
-      scm:git:ssh://git@github.com:levigo/jadice-dss-utils.git
-    </developerConnection>
-    <tag>HEAD</tag>
 
-    <url>https://github.com/levigo/jadice-dss-utils</url>
-  </scm>
+  <build>
+    <plugins>
 
-  <distributionManagement>
-    <repository>
-      <id>maven2.releases.levigo.de</id>
-      <url>https://levigo.de/maven2/content/repositories/levigo-releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>maven2.snapshots.levigo.de</id>
-      <url>https://levigo.de/maven2/content/repositories/levigo-snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+    </plugins>
+  </build>
 </project>
