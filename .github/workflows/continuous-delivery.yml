@@ -1,0 +1,133 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '.github/workflows/continuous-integration.yml'
+
+env:
+  # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+  # when running from the command line.
+  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  TAG_PREFIX: 'jadice-dss-utils-'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      ## compute the string of the next version
+      - name: Bump version and create tag
+        id: semanticversion
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          release_branches: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fetch_all_tags: true
+          tag_prefix: ${{ env.TAG_PREFIX }}
+
+      ## check if the computed string of the next version is conform to our regex
+      - name: Verify and print new build number
+        run: |
+          if echo '${{ steps.semanticversion.outputs.new_tag }}' |grep -Eq '^${{ env.TAG_PREFIX }}[0-9]+[.][0-9]+[.][0-9]+$'; then
+            echo Tag '${{ steps.semanticversion.outputs.new_tag }}', New version '${{ steps.semanticversion.outputs.new_version }}', Changelog '${{ steps.semanticversion.outputs.changelog }}'
+          else
+            echo 'unexpected tag format - aborting'
+            exit -1
+          fi
+
+      - name: Set version and tag variables
+        run: |
+          echo "NEW_VERSION=${{ steps.semanticversion.outputs.new_version }}" >> $GITHUB_ENV \
+          && echo "NEW_TAG=${{ env.TAG_PREFIX }}${{ steps.semanticversion.outputs.new_version }}" >> $GITHUB_ENV
+
+      ## Configure JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Enable Caching
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: |
+            ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      ## Configure maven settings
+      - name: Prepare maven settings
+        env:
+          REPOSITORY_URL: ${{ secrets.LEVIGO_NEXUS_REPO_RELEASES }}
+          REPOSITORY_RELEASE_USERID: ${{ secrets.PUB_NEXUS2_USERNAME_RW }}
+          REPOSITORY_RELEASE_CREDENTIALS: ${{ secrets.PUB_NEXUS2_PASSWORD_RW}}
+        run: |
+          echo NEXUS2_REPO_RELEASES ${{ secrets.NEXUS2_REPO_RELEASES }}
+          mkdir -p ~/.m2
+          envsubst < ./.github/settings.xml > ~/.m2/settings.xml
+
+      ## Build with maven
+      - name: Set version
+        id: version
+        run: |
+          echo Releasing as ${{ env.NEW_VERSION }}
+          mvn ${{ env.MAVEN_CLI_OPTS }} versions:set -DnewVersion=${{ env.NEW_VERSION }}
+
+      - name: Perform build
+        run: mvn -B verify -Dmaven.test.failure.ignore=true
+
+      ## Publish test report
+      - name: Publish Test Report for JDK 11
+        id: test-report
+        uses: scacap/action-surefire-report@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_test_failures: true
+          check_name: Test Report for JDK 11
+
+      ## Deploy
+      - name: Deploy packages
+        run: mvn ${{ env.MAVEN_CLI_OPTS }} deploy -Dmaven.install.skip=true
+
+      ## Create Release
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ env.NEW_VERSION }}
+          tag_name: ${{ steps.semanticversion.outputs.new_tag }}
+          draft: false
+          prerelease: false
+          files: |
+            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}.jar
+            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}-javadoc.jar
+            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}-sources.jar
+
+      ## Notify developers
+      - name: Notify developers
+        uses: 8398a7/action-slack@v3
+        with:
+          username: GitHub
+          icon_emoji: octocat
+          channel: ci_docp
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref
+          text: Released new version `${{ env.NEW_VERSION }}` of *${{ github.repository }}*
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: failure()
