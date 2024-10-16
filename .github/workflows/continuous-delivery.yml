@@ -116,9 +116,9 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}.jar
-            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}-javadoc.jar
-            ./target/documentplatform-standard14-fonts-${{ steps.semanticversion.outputs.new_version }}-sources.jar
+            ./target/jadice-dss-utils-${{ steps.semanticversion.outputs.new_version }}.jar
+            ./target/jadice-dss-utils-${{ steps.semanticversion.outputs.new_version }}-javadoc.jar
+            ./target/jadice-dss-utils-${{ steps.semanticversion.outputs.new_version }}-sources.jar
 
       ## Notify developers
       - name: Notify developers
