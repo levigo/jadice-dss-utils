@@ -62,7 +62,8 @@ public class TrustStoreCreator {
   private TrustStoreCreator() {
   }
 
-  public static void create(File trustStoreFile, String trustStorePassword, String trustStoreType, List<String> trustedLists) {
+  public static void create(File trustStoreFile, String trustStorePassword, String trustStoreType,
+      List<String> trustedLists) {
     // Create a list in which the certificates are put
     TrustedListsCertificateSource tslCertificateSource = new TrustedListsCertificateSource();
     // Create a job
@@ -85,7 +86,8 @@ public class TrustStoreCreator {
     fileToDelete.delete();
   }
 
-  private static TLValidationJob createJob(TrustedListsCertificateSource tslCertificateSource, List<String> trustedLists) {
+  private static TLValidationJob createJob(TrustedListsCertificateSource tslCertificateSource,
+      List<String> trustedLists) {
     TLValidationJob job = new TLValidationJob();
     FileCacheDataLoader onlineLoader = onlineLoader();
     job.setOnlineDataLoader(onlineLoader);
