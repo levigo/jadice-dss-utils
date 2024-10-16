@@ -1,1 +1,1 @@
-# dss-signature-utils
+# jadice-dss-utils
