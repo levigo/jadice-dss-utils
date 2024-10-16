@@ -1,4 +1,4 @@
-package org.jadice.signature.dss.util;
+package org.jadice.dss.util;
 
 import java.io.File;
 import java.net.URISyntaxException;
