@@ -23,6 +23,12 @@
       <artifactId>logging</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <!-- base library -->
     <dependency>
       <groupId>eu.europa.ec.joinup.sd-dss</groupId>
