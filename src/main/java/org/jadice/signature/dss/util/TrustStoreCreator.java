@@ -54,7 +54,7 @@ public class TrustStoreCreator {
   private static final String OJ_KEYSTORE_PASSWORD = "oj-password";
   private static final String OJ_KEYSTORE_FILE = "/oj-keystore.p12";
 
-  private static final String LOTL_CACHE_DIR = System.getProperty("java.io.tmpdir") + "dss-tsl-loader-jadice";
+  private static final String LOTL_CACHE_DIR = System.getProperty("java.io.tmpdir") + "/dss-tsl-loader-jadice";
   private static final String LOTL_URL = "https://ec.europa.eu/tools/lotl/eu-lotl.xml";
   private static final String OFFICIAL_JOURNAL_URL = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv:OJ.C_.2019.276.01.0001.01.ENG";
 
