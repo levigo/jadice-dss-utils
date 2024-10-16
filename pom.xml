@@ -8,15 +8,19 @@
   <version>7.0.0-SNAPSHOT</version>
 
   <properties>
-    <jadice.utils.version>1.2.13</jadice.utils.version>
+    <jadice.utils.version>6.5.23</jadice.utils.version>
     <jadice.utils.groupId>org.jadice.util</jadice.utils.groupId>
     <dss.version>6.1</dss.version>
+
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <dependencies>
+
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>signature-base</artifactId>
+      <groupId>${jadice.utils.groupId}</groupId>
+      <artifactId>logging</artifactId>
     </dependency>
 
     <!-- base library -->
@@ -56,8 +60,9 @@
       <groupId>eu.europa.ec.joinup.sd-dss</groupId>
       <artifactId>dss-xades</artifactId>
     </dependency>
-
   </dependencies>
+
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -67,6 +72,31 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- ########################################################################## -->
+      <!-- jadice utils dependencies -->
+      <!-- ########################################################################## -->
+      <dependency>
+        <groupId>${jadice.utils.groupId}</groupId>
+        <artifactId>jadice-utils-bom</artifactId>
+        <version>${jadice.utils.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
   <scm>
