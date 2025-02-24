@@ -18,6 +18,21 @@ env:
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
 
+# needed for dependabot to work
+permissions:
+  actions: write
+  checks: write
+  contents: read
+  deployments: read
+  discussions: read
+  issues: read
+  packages: read
+  pages: read
+  pull-requests: write
+  repository-projects: read
+  security-events: read
+  statuses: read
+
 jobs:
   build:
     runs-on: ubuntu-22.04
