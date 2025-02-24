@@ -69,12 +69,10 @@ jobs:
       - name: Prepare maven settings
         env:
           REPOSITORY_URL: ${{ vars.LEVIGO_MAVEN2_ALL_REPOSITORIES }}
-          REPOSITORY_USERID: ${{ secrets.LEVIGO_NEXUS_USERNAME_RO }}
-          REPOSITORY_CREDENTIALS: ${{ secrets.LEVIGO_NEXUS_PASSWORD_RO }}
-          REPOSITORY_RELEASE_USERID: ${{ secrets.LEVIGO_NEXUS_USERNAME }}
-          REPOSITORY_RELEASE_CREDENTIALS: ${{ secrets.LEVIGO_NEXUS_PASSWORD }}
-          SONAR_HOST_URL: ${{ vars.LEVIGO_SONAR_HOST_URL }}
-          SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+          REPOSITORY_USERID: ${{ secrets.PUB_NEXUS2_USERNAME }}
+          REPOSITORY_CREDENTIALS: ${{ secrets.PUB_NEXUS2_PASSWORD }}
+          REPOSITORY_RELEASE_USERID: ${{ secrets.PUB_NEXUS2_PASSWORD_RW }}
+          REPOSITORY_RELEASE_CREDENTIALS: ${{ secrets.PUB_NEXUS2_USERNAME_RW }}
         run: |
           echo NEXUS2_REPO_RELEASES ${{ secrets.NEXUS2_REPO_RELEASES }}
           mkdir -p ~/.m2
