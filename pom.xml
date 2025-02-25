@@ -35,7 +35,7 @@
   </distributionManagement>
 
   <properties>
-    <jadice.utils.version>6.5.23</jadice.utils.version>
+    <jadice.utils.version>6.5.55</jadice.utils.version>
     <jadice.utils.groupId>org.jadice.util</jadice.utils.groupId>
     <!-- If this version is updated also update it in the core module signature-dss-->
     <dss.version>6.1</dss.version>
