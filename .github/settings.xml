@@ -13,8 +13,7 @@
     </servers>
     <profiles>
         <!--
-         Downloading all maven artifacts from a mirror some 6000 miles away does not seem reasonable.
-         Therefore we download only the private artifacts from Nexus3 and all publicly available artifacts from maven-central.
+         Download only the private artifacts from Nexus3 and all publicly available artifacts from maven-central.
          -->
         <profile>
             <id>central-nexus</id>
