@@ -9,6 +9,21 @@ on:
       - '**/README.md'
       - '.github/workflows/continuous-delivery.yml'
 
+# needed for dependabot to work
+permissions:
+  actions: write
+  checks: write
+  contents: read
+  deployments: read
+  discussions: read
+  issues: read
+  packages: read
+  pages: read
+  pull-requests: write
+  repository-projects: read
+  security-events: read
+  statuses: read
+
 env:
   # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
@@ -22,6 +37,15 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
+    env:
+      # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
+      # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+      MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+      # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
+      # when running from the command line.
+      # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
+      MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+      # be sure the prefix here and the ones on the maintenance branches are not substrings of each other
 
     strategy:
       fail-fast: false
@@ -38,11 +62,30 @@ jobs:
           java-version: 11
           cache: 'maven'
 
+      ## Enable Caching
+      # Reduce cache size by excluding artifacts with the project.groupId
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      ## Configure maven settings
       - name: Prepare maven settings
         env:
-          REPOSITORY_URL: ${{ secrets.LEVIGO_NEXUS_REPO_RELEASES }}
+          REPOSITORY_URL: ${{ vars.LEVIGO_MAVEN2_ALL_REPOSITORIES }}
           REPOSITORY_USERID: ${{ secrets.PUB_NEXUS2_USERNAME }}
           REPOSITORY_CREDENTIALS: ${{ secrets.PUB_NEXUS2_PASSWORD }}
+          REPOSITORY_RELEASE_USERID: ${{ secrets.PUB_NEXUS2_PASSWORD_RW }}
+          REPOSITORY_RELEASE_CREDENTIALS: ${{ secrets.PUB_NEXUS2_USERNAME_RW }}
+#      - name: Prepare maven settings
+#        env:
+#         REPOSITORY_URL: ${{ secrets.LEVIGO_NEXUS_REPO_RELEASES }}
+#          REPOSITORY_USERID: ${{ secrets.PUB_NEXUS2_USERNAME }}
+#          REPOSITORY_CREDENTIALS: ${{ secrets.PUB_NEXUS2_PASSWORD }}
         run: |
           mkdir -p ~/.m2
           envsubst < ./.github/settings.xml > ~/.m2/settings.xml
