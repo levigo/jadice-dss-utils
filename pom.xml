@@ -35,7 +35,7 @@
   </distributionManagement>
 
   <properties>
-    <jadice.utils.version>6.5.55</jadice.utils.version>
+    <jadice.utils.version>6.7.32</jadice.utils.version>
     <jadice.utils.groupId>org.jadice.util</jadice.utils.groupId>
     <!-- If this version is updated also update it in the core module signature-dss-->
     <dss.version>6.3</dss.version>
@@ -143,7 +143,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.11.2</version>
+        <version>3.12.0</version>
         <executions>
           <execution>
             <goals>
@@ -155,7 +155,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>3.4.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
