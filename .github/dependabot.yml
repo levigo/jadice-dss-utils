@@ -1,0 +1,31 @@
+---
+version: 2
+updates:
+  # Enable version updates for maven
+  - package-ecosystem: "maven"
+    directory: "/"
+    # Check the maven registry for updates every day (weekdays)
+    schedule:
+      interval: "daily"
+      # Check for npm updates on a daily basis
+      time: "00:12"
+      timezone: "Europe/Berlin"
+    # Disable rebasing for dependabot pull requests
+    rebase-strategy: "disabled"
+    target-branch: "main"
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "org.jadice.util*"
+    registries:
+      - levigo-nexus
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+registries:
+  levigo-nexus:
+    type: maven-repository
+    url: https://artifacts.jadice.com
+    username: ${{ secrets.LEVIGO_NEXUS_USERNAME_RO }}
+    password: ${{ secrets.LEVIGO_NEXUS_PASSWORD_RO }}
+...
