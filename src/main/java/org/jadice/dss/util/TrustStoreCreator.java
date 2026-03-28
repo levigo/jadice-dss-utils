@@ -17,6 +17,8 @@ import org.jadice.util.log.qualified.QualifiedLogger;
 import eu.europa.esig.dss.model.x509.CertificateToken;
 import eu.europa.esig.dss.service.http.commons.CommonsDataLoader;
 import eu.europa.esig.dss.service.http.commons.FileCacheDataLoader;
+import eu.europa.esig.dss.service.http.proxy.ProxyConfig;
+import eu.europa.esig.dss.service.http.proxy.ProxyProperties;
 import eu.europa.esig.dss.spi.tsl.TrustedListsCertificateSource;
 import eu.europa.esig.dss.spi.x509.CertificateSource;
 import eu.europa.esig.dss.spi.x509.KeyStoreCertificateSource;
@@ -115,12 +117,24 @@ public class TrustStoreCreator {
   }
 
   private static FileCacheDataLoader onlineLoader() {
+    ProxyProperties httpProperties = new ProxyProperties();
+    httpProperties.setHost("proxy.jadice.com");
+    httpProperties.setPort(8080);
+    httpProperties.setScheme("https");
+     httpProperties.setUser("proxyUser");
+     httpProperties.setPassword("proxyPass".toCharArray());
+
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.setHttpsProperties(httpProperties);
+
+
     FileCacheDataLoader onlineFileLoader = new FileCacheDataLoader();
     onlineFileLoader.setCacheExpirationTime(0);
     CommonsDataLoader dl = new CommonsDataLoader();
     dl.setTimeoutConnection(5000);
     dl.setTimeoutConnectionRequest(5000);
     dl.setRedirectsEnabled(true);
+    dl.setProxyConfig(proxyConfig);
     onlineFileLoader.setDataLoader(dl);
 
     // We need to specify a cache directory
