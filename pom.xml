@@ -39,6 +39,8 @@
     <jadice.utils.groupId>org.jadice.util</jadice.utils.groupId>
     <!-- If this version is updated also update it in the core module signature-dss-->
     <dss.version>6.5.RC1</dss.version>
+    <!-- CVE-2026-54399 and CVE-2026-54428 fix version, takes precedence over the version pulled in via dss-bom in signature-dss -->
+    <version.org.apache.httpcomponents.core5>5.4.3</version.org.apache.httpcomponents.core5>
 
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -108,6 +110,19 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Override for CVE-2026-54399 and CVE-2026-54428 -->
+      <!-- see https://www.cve.org/CVERecord?id=CVE-2026-54399 and https://www.cve.org/CVERecord?id=CVE-2026-54428 -->
+      <!-- pulled in via dss-bom -> dss-service; remove once dss.version ships httpcore5 >= 5.4.3 -->
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5</artifactId>
+        <version>${version.org.apache.httpcomponents.core5}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5-h2</artifactId>
+        <version>${version.org.apache.httpcomponents.core5}</version>
+      </dependency>
       <dependency>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <artifactId>dss-bom</artifactId>
