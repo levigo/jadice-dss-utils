@@ -59,6 +59,20 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- override because of CVE-2026-54399-->
+    <!-- pulled in via dss-bom -> dss-service; remove once dss.version ships httpcore5 >= 5.4.3 -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5</artifactId>
+      <version>${version.org.apache.httpcomponents.core5}</version>
+    </dependency>
+    <!-- override because of CVE-2026-54428-->
+    <dependency>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5-h2</artifactId>
+      <version>${version.org.apache.httpcomponents.core5}</version>
+    </dependency>
+
     <!-- base library -->
     <dependency>
       <groupId>eu.europa.ec.joinup.sd-dss</groupId>
@@ -110,19 +124,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- Override for CVE-2026-54399 and CVE-2026-54428 -->
-      <!-- see https://www.cve.org/CVERecord?id=CVE-2026-54399 and https://www.cve.org/CVERecord?id=CVE-2026-54428 -->
-      <!-- pulled in via dss-bom -> dss-service; remove once dss.version ships httpcore5 >= 5.4.3 -->
-      <dependency>
-        <groupId>org.apache.httpcomponents.core5</groupId>
-        <artifactId>httpcore5</artifactId>
-        <version>${version.org.apache.httpcomponents.core5}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents.core5</groupId>
-        <artifactId>httpcore5-h2</artifactId>
-        <version>${version.org.apache.httpcomponents.core5}</version>
-      </dependency>
       <dependency>
         <groupId>eu.europa.ec.joinup.sd-dss</groupId>
         <artifactId>dss-bom</artifactId>
