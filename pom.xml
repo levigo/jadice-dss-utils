@@ -38,7 +38,7 @@
     <jadice.utils.version>6.8.2</jadice.utils.version>
     <jadice.utils.groupId>org.jadice.util</jadice.utils.groupId>
     <!-- If this version is updated also update it in the core module signature-dss-->
-    <dss.version>6.5.RC1</dss.version>
+    <dss.version>6.5</dss.version>
     <!-- CVE-2026-54399 and CVE-2026-54428 fix version, takes precedence over the version pulled in via dss-bom in signature-dss -->
     <version.org.apache.httpcomponents.core5>5.4.3</version.org.apache.httpcomponents.core5>
 
